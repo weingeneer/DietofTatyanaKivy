@@ -1,4 +1,4 @@
-__version__ = '0.0.1'
+__version__ = '0.1'
 
 from kivy.app import App
 from kivy.uix.button import Button
