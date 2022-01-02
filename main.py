@@ -1,17 +1,68 @@
 from kivy.app import App
 from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
+from kivy.graphics import Color, Rectangle
+from kivy.uix.label import Label
 import random
 
 class DietOfTatyanaApp(App):
-    def build(self):
-        box = BoxLayout()
-        button1 = Button()
-        button2 = Button()
 
-        box.add_widget(button1)
-        box.add_widget(button2)
-        return box
+    def build(self):
+        self.root = root = RootWidget()
+        root.bind(size=self._update_rect, pos=self._update_rect)
+        self.rect = Rectangle(size=root.size, pos=root.pos)
+
+        return root
+
+    def _update_rect(self, instance, value):
+        self.rect.pos = instance.pos
+        self.rect.size = instance.size
+
+class RootWidget(FloatLayout):
+
+    def __init__(self, **kwargs):
+        super(RootWidget, self).__init__(**kwargs)
+        self.draw_button()
+
+    def draw_button(self):
+        self.add_widget(
+            Button(
+                text="Random Soup",
+                size_hint=(.3, .2),
+                pos_hint={'x': .05, 'y': .7}
+            )
+        )
+        self.add_widget(
+            Button(
+                text="Random Dish",
+                size_hint=(.3, .2),
+                pos_hint={'x': .35, 'y': .7}
+            )
+        )
+        self.add_widget(
+            Button(
+                text="Random Bread",
+                size_hint=(.3, .2),
+                pos_hint={'x': .65, 'y': .7}
+            )
+        )
+        self.add_widget(
+            Button(
+                text="Random Compote",
+                size_hint=(.3, .2),
+                pos_hint={'center_x': .35, 'center_y': .6}
+            )
+        )
+        self.add_widget(
+            Button(
+                text="Random Candies",
+                size_hint=(.3, .2),
+                pos_hint={'center_x': .65, 'center_y': .6}
+            )
+        )
+
+    def draw_header(self):
+        pass
 
 # def get_random_soup():
 #     data_soup = [
