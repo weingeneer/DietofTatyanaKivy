@@ -1,32 +1,40 @@
+__version__ = '0.0.1'
+
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
-from kivy.graphics import Color, Rectangle, Line
+from kivy.graphics import Color, Line
 from kivy.uix.label import Label
+from kivy.uix.image import Image
 import random
+
 
 class DietOfTatyanaApp(App):
 
     def build(self):
         self.root = root = RootWidget()
-        # root.bind(size=self._update_rect, pos=self._update_rect)
-        #
-        #
-        # with root.canvas.before:
-        #     Color(0, 0, 0, 0)
-        #     self.rect = Rectangle(size=root.size, pos=root.pos)
-        #     self.line = Line(points=[100, 200, 300, 400])
+        with root.canvas:
+            Color(0, 0, 0)
+            Line(points=(50, 180, 50, 250), width=2)
+            Line(points=(275, 180, 275, 250), width=2)
+            Line(points=(515, 180, 515, 250), width=2)
+            Line(points=(750, 180, 750, 250), width=2)
+            Line(points=(160, 45, 160, 115), width=2)
+            Line(points=(400, 45, 400, 115), width=2)
+            Line(points=(640, 45, 640, 115), width=2)
 
         return root
 
-    # def _update_rect(self, instance, value):
-    #     self.rect.pos = instance.pos
-    #     self.rect.size = instance.size
 
 class RootWidget(FloatLayout):
 
     def __init__(self, **kwargs):
         super(RootWidget, self).__init__(**kwargs)
+        self.add_widget(
+            Image(
+                source=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\background\texture.jpg'
+            )
+        )
         self.draw_button()
         self.draw_header()
         self.draw_footer()
@@ -152,41 +160,71 @@ class RootWidget(FloatLayout):
     def draw_button(self):
         self.add_widget(
             Button(
-                text="Случайный суп",
+                text="Cуп",
+                text_size=(190, 40),
+                color=(0, 0, 0),
+                font_size=30,
+                halign='left',
                 size_hint=(.3, .2),
-                pos_hint={'x': .05, 'y': .7},
+                pos_hint={'x': .03, 'y': .7},
+                background_normal=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\soup.jpg',
+                background_down=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\soup_down.jpg',
                 on_press=self.click_soup
             )
         )
         self.add_widget(
             Button(
-                text="Случайное второе",
+                text="Второе",
+                text_size=(200, 40),
+                color=(1, 1, 1),
+                font_size=30,
+                halign='left',
                 size_hint=(.3, .2),
                 pos_hint={'x': .35, 'y': .7},
+                background_normal=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\dish.jpg',
+                background_down=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\dish_down.jpg',
                 on_press=self.click_dish
             )
         )
         self.add_widget(
             Button(
-                text="Случайная прикуска",
+                text="Хлеб",
+                text_size=(200, 40),
+                color=(0, 0, 0),
+                font_size=30,
+                halign='left',
                 size_hint=(.3, .2),
-                pos_hint={'x': .65, 'y': .7},
+                pos_hint={'x': .67, 'y': .7},
+                background_normal=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\bread.jpg',
+                background_down=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\bread_down.jpg',
                 on_press=self.click_bread
             )
         )
         self.add_widget(
             Button(
-                text="Случайный компот",
+                text="Компот",
+                text_size=(230, 40),
+                color=(1, 1, 1),
+                font_size=30,
+                halign='right',
                 size_hint=(.3, .2),
-                pos_hint={'center_x': .35, 'center_y': .6},
+                pos_hint={'center_x': .34, 'center_y': .58},
+                background_normal=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\compote.jpg',
+                background_down=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\compote_down.jpg',
                 on_press=self.click_compote
             )
         )
         self.add_widget(
             Button(
-                text="Случайное сладкое?",
+                text="А сладкое?",
+                text_size=(230, 40),
+                color=(1, 1, 1),
+                font_size=30,
+                halign='right',
                 size_hint=(.3, .2),
-                pos_hint={'center_x': .65, 'center_y': .6},
+                pos_hint={'center_x': .66, 'center_y': .58},
+                background_normal=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\candies.jpg',
+                background_down=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\candies_down.jpg',
                 on_press=self.click_candies
             )
         )
@@ -195,8 +233,10 @@ class RootWidget(FloatLayout):
         self.add_widget(
             Label(
                 text='Не знаешь что приготовить? Доверься случаю!',
+                font_size=24,
                 size_hint=(1.0, .1),
-                pos_hint={'x': .0, 'y': .9}
+                pos_hint={'x': .0, 'y': .9},
+                color=(0, 0, 0)
             )
         )
 
@@ -204,34 +244,40 @@ class RootWidget(FloatLayout):
         self.soup = Label(
             text='Не выбрано',
             size_hint=(.2, .15),
-            pos_hint={'x': .1, 'y': .25}
+            pos_hint={'x': .1, 'y': .25},
+            color=(0, 0, 0)
         )
         self.dish = Label(
-                text='Не выбрано',
-                size_hint=(.2, .15),
-                pos_hint={'x': .4, 'y': .25}
+            text='Не выбрано',
+            size_hint=(.2, .15),
+            pos_hint={'x': .4, 'y': .25},
+            color=(0, 0, 0)
         )
         self.bread = Label(
             text='Не выбрано',
             size_hint=(.2, .15),
-            pos_hint={'x': .7, 'y': .25}
+            pos_hint={'x': .7, 'y': .25},
+            color=(0, 0, 0)
         )
         self.compote = Label(
-                text='Не выбрано',
-                size_hint=(.2, .15),
-                pos_hint={'center_x': .35, 'center_y': .09}
+            text='Не выбрано',
+            size_hint=(.2, .15),
+            pos_hint={'center_x': .35, 'center_y': .09},
+            color=(0, 0, 0)
         )
         self.candies = Label(
-                text='А сладкое нельзя!',
-                size_hint=(.2, .15),
-                pos_hint={'center_x': .65, 'center_y': .09}
+            text='А сладкое нельзя!',
+            size_hint=(.2, .15),
+            pos_hint={'center_x': .65, 'center_y': .09},
+            color=(0, 0, 0)
         )
 
         self.add_widget(
             Label(
                 text='Твой суп сегодня:',
                 size_hint=(.3, .05),
-                pos_hint={'x': .05, 'y': .4}
+                pos_hint={'x': .05, 'y': .4},
+                color=(0, 0, 0)
             )
         )
         self.add_widget(
@@ -242,7 +288,8 @@ class RootWidget(FloatLayout):
             Label(
                 text='Твое второе сегодня:',
                 size_hint=(.3, .05),
-                pos_hint={'x': .35, 'y': .4}
+                pos_hint={'x': .35, 'y': .4},
+                color=(0, 0, 0)
             )
         )
         self.add_widget(
@@ -253,7 +300,8 @@ class RootWidget(FloatLayout):
             Label(
                 text='Твоя прикуска сегодня:',
                 size_hint=(.3, .05),
-                pos_hint={'x': .65, 'y': .4}
+                pos_hint={'x': .65, 'y': .4},
+                color=(0, 0, 0)
             )
         )
         self.add_widget(
@@ -264,7 +312,8 @@ class RootWidget(FloatLayout):
             Label(
                 text='Твой компот сегодня:',
                 size_hint=(.3, .05),
-                pos_hint={'center_x': .35, 'center_y': .2}
+                pos_hint={'center_x': .35, 'center_y': .2},
+                color=(0, 0, 0)
             )
         )
         self.add_widget(
@@ -275,7 +324,8 @@ class RootWidget(FloatLayout):
             Label(
                 text='Твое сладкое сегодня:',
                 size_hint=(.3, .05),
-                pos_hint={'center_x': .65, 'center_y': .2}
+                pos_hint={'center_x': .65, 'center_y': .2},
+                color=(0, 0, 0)
             )
         )
         self.add_widget(
