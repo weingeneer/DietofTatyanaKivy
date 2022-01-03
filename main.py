@@ -1,4 +1,4 @@
-__version__ = '0.1.1'
+__version__ = '0.2'
 
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
