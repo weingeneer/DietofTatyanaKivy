@@ -1,45 +1,37 @@
-__version__ = '0.1'
+__version__ = '0.1.1'
 
 from kivy.app import App
-from kivy.uix.button import Button
-from kivy.uix.floatlayout import FloatLayout
-from kivy.graphics import Color, Line
-from kivy.uix.label import Label
-from kivy.uix.image import Image
+from kivy.uix.gridlayout import GridLayout
+from kivy.properties import ObjectProperty
+from kivy.core.window import Window
+from kivymd.theming import ThemeManager
 import random
+
+# Window.size = (1080, 2400)
+Window.size = (270, 600)
 
 
 class DietOfTatyanaApp(App):
+    theme_cls = ThemeManager()
+    title = 'Diet of Tatyana'
 
     def build(self):
-        self.root = root = RootWidget()
-        with root.canvas:
-            Color(0, 0, 0)
-            Line(points=(50, 180, 50, 250), width=2)
-            Line(points=(275, 180, 275, 250), width=2)
-            Line(points=(515, 180, 515, 250), width=2)
-            Line(points=(750, 180, 750, 250), width=2)
-            Line(points=(160, 45, 160, 115), width=2)
-            Line(points=(400, 45, 400, 115), width=2)
-            Line(points=(640, 45, 640, 115), width=2)
-
-        return root
+        self.theme_cls.theme_style = 'Light'
+        return RootWidget()
 
 
-class RootWidget(FloatLayout):
+class RootWidget(GridLayout):
 
-    def __init__(self, **kwargs):
-        super(RootWidget, self).__init__(**kwargs)
-        self.add_widget(
-            Image(
-                source=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\background\texture.jpg'
-            )
-        )
-        self.draw_button()
-        self.draw_header()
-        self.draw_footer()
+    click = 0
 
-    def click_soup(self, instance):
+    soup = ObjectProperty()
+    dish = ObjectProperty()
+    bread = ObjectProperty()
+    compote = ObjectProperty()
+    candies = ObjectProperty()
+    candies_title = ObjectProperty()
+
+    def click_soup(self):
         data_soup = [
             'Суп с курицей, картошкой, марковкой',
             'Суп с рыбой, яйцом, картошкой',
@@ -53,10 +45,8 @@ class RootWidget(FloatLayout):
         ]
         self.soup.text = random.choice(data_soup)
         self.soup.text_size = self.soup.size
-        self.soup.halign = 'center'
-        self.soup.valign = 'center'
 
-    def click_dish(self, instance):
+    def click_dish(self):
         data_dish = [
             'Овощное рагу',
             'Отварной картофель с рыбой',
@@ -100,11 +90,9 @@ class RootWidget(FloatLayout):
             'Курица с овощами запечённая в духовке',
         ]
         self.dish.text = random.choice(data_dish)
-        self.dish.text_size = self.soup.size
-        self.dish.halign = 'center'
-        self.dish.valign = 'center'
+        self.dish.text_size = self.dish.size
 
-    def click_bread(self, instance):
+    def click_bread(self):
         data_bread = [
             'Сухари',
             'Тосты',
@@ -115,17 +103,18 @@ class RootWidget(FloatLayout):
             'Бутерброд из вчерашнего хлеба с сыром',
         ]
         self.bread.text = random.choice(data_bread)
-        self.bread.text_size = self.soup.size
-        self.bread.halign = 'center'
-        self.bread.valign = 'center'
+        self.bread.text_size = self.bread.size
 
-    def click_compote(self, instance):
-        self.compote.text = 'Кампот только из сухофруктов, другого нельзя!'
-        self.compote.text_size = self.soup.size
-        self.compote.halign = 'center'
-        self.compote.valign = 'center'
+    def click_compote(self):
+        self.click += 1
+        if self.click == 5:
+            self.compote.text = 'Шо тыкаешь? Другого нельзя!'
+            self.click = 0
+        else:
+            self.compote.text = 'Компот из сухофруктов'
+            self.compote.text_size = self.compote.size
 
-    def click_candies(self, instance):
+    def click_candies(self):
         data_candies = [
             'красивая', 'умная', 'заботливая', 'привлекательная', 'сексуальная',
             'добрая', 'нежная', 'милая', 'очаровательная', 'обворожительная',
@@ -148,189 +137,9 @@ class RootWidget(FloatLayout):
             'необходимая', 'изумительная', 'сказочная', 'трогательная', 'миниатюрная',
             'любимая', 'самая-самая',
         ]
-        self.candies.text = '''
-        Вместо сладкого:
-        Таня, ты 
-        ''' + random.choice(data_candies)
-        self.candies.text_size = self.soup.size
-        self.candies.halign = 'center'
-        self.candies.valign = 'center'
-        self.candies.pos_hint = {'center_x': .63, 'center_y': .09}
-
-    def draw_button(self):
-        self.add_widget(
-            Button(
-                text="Cуп",
-                text_size=(190, 40),
-                color=(0, 0, 0),
-                font_size=30,
-                halign='left',
-                size_hint=(.3, .2),
-                pos_hint={'x': .03, 'y': .7},
-                background_normal=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\soup.jpg',
-                background_down=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\soup_down.jpg',
-                on_press=self.click_soup
-            )
-        )
-        self.add_widget(
-            Button(
-                text="Второе",
-                text_size=(200, 40),
-                color=(1, 1, 1),
-                font_size=30,
-                halign='left',
-                size_hint=(.3, .2),
-                pos_hint={'x': .35, 'y': .7},
-                background_normal=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\dish.jpg',
-                background_down=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\dish_down.jpg',
-                on_press=self.click_dish
-            )
-        )
-        self.add_widget(
-            Button(
-                text="Хлеб",
-                text_size=(200, 40),
-                color=(0, 0, 0),
-                font_size=30,
-                halign='left',
-                size_hint=(.3, .2),
-                pos_hint={'x': .67, 'y': .7},
-                background_normal=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\bread.jpg',
-                background_down=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\bread_down.jpg',
-                on_press=self.click_bread
-            )
-        )
-        self.add_widget(
-            Button(
-                text="Компот",
-                text_size=(230, 40),
-                color=(1, 1, 1),
-                font_size=30,
-                halign='right',
-                size_hint=(.3, .2),
-                pos_hint={'center_x': .34, 'center_y': .58},
-                background_normal=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\compote.jpg',
-                background_down=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\compote_down.jpg',
-                on_press=self.click_compote
-            )
-        )
-        self.add_widget(
-            Button(
-                text="А сладкое?",
-                text_size=(230, 40),
-                color=(1, 1, 1),
-                font_size=30,
-                halign='right',
-                size_hint=(.3, .2),
-                pos_hint={'center_x': .66, 'center_y': .58},
-                background_normal=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\candies.jpg',
-                background_down=r'C:\Users\DenKung\PycharmProjects\DietofTatyanaKivy\data\texture\buttons\candies_down.jpg',
-                on_press=self.click_candies
-            )
-        )
-
-    def draw_header(self):
-        self.add_widget(
-            Label(
-                text='Не знаешь что приготовить? Доверься случаю!',
-                font_size=24,
-                size_hint=(1.0, .1),
-                pos_hint={'x': .0, 'y': .9},
-                color=(0, 0, 0)
-            )
-        )
-
-    def draw_footer(self):
-        self.soup = Label(
-            text='Не выбрано',
-            size_hint=(.2, .15),
-            pos_hint={'x': .1, 'y': .25},
-            color=(0, 0, 0)
-        )
-        self.dish = Label(
-            text='Не выбрано',
-            size_hint=(.2, .15),
-            pos_hint={'x': .4, 'y': .25},
-            color=(0, 0, 0)
-        )
-        self.bread = Label(
-            text='Не выбрано',
-            size_hint=(.2, .15),
-            pos_hint={'x': .7, 'y': .25},
-            color=(0, 0, 0)
-        )
-        self.compote = Label(
-            text='Не выбрано',
-            size_hint=(.2, .15),
-            pos_hint={'center_x': .35, 'center_y': .09},
-            color=(0, 0, 0)
-        )
-        self.candies = Label(
-            text='А сладкое нельзя!',
-            size_hint=(.2, .15),
-            pos_hint={'center_x': .65, 'center_y': .09},
-            color=(0, 0, 0)
-        )
-
-        self.add_widget(
-            Label(
-                text='Твой суп сегодня:',
-                size_hint=(.3, .05),
-                pos_hint={'x': .05, 'y': .4},
-                color=(0, 0, 0)
-            )
-        )
-        self.add_widget(
-            self.soup
-        )
-
-        self.add_widget(
-            Label(
-                text='Твое второе сегодня:',
-                size_hint=(.3, .05),
-                pos_hint={'x': .35, 'y': .4},
-                color=(0, 0, 0)
-            )
-        )
-        self.add_widget(
-            self.dish
-        )
-
-        self.add_widget(
-            Label(
-                text='Твоя прикуска сегодня:',
-                size_hint=(.3, .05),
-                pos_hint={'x': .65, 'y': .4},
-                color=(0, 0, 0)
-            )
-        )
-        self.add_widget(
-            self.bread
-        )
-
-        self.add_widget(
-            Label(
-                text='Твой компот сегодня:',
-                size_hint=(.3, .05),
-                pos_hint={'center_x': .35, 'center_y': .2},
-                color=(0, 0, 0)
-            )
-        )
-        self.add_widget(
-            self.compote
-        )
-
-        self.add_widget(
-            Label(
-                text='Твое сладкое сегодня:',
-                size_hint=(.3, .05),
-                pos_hint={'center_x': .65, 'center_y': .2},
-                color=(0, 0, 0)
-            )
-        )
-        self.add_widget(
-            self.candies
-        )
+        self.candies_title.text = 'Вместо сладкого:'
+        self.candies.text = 'Ты ' + random.choice(data_candies) + '!'
+        self.candies.text_size = self.candies.size
 
 if __name__ == '__main__':
     DietOfTatyanaApp().run()

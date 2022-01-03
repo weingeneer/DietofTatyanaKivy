@@ -1,0 +1,78 @@
+#:import MDLabel kivymd.label.MDLabel
+#:import MDRaisedButton kivymd.button.MDRaisedButton
+
+<ItemLabel@MDLabel>:
+    text_size: self.size
+    font_size: '15sp'
+    halign: 'left'
+    valign: 'middle'
+
+<UsButton@MDRaisedButton>:
+    font_size: '20sp'
+    text_size: self.size
+    halign: 'center'
+    valign: 'middle'
+    size_hint_x: 1.0
+
+<RootWidget>:
+    rows: 2
+
+    soup: soup_id
+    dish: dish_id
+    bread: bread_id
+    compote: compote_id
+    candies: candies_id
+    candies_title: candies_title
+
+    AnchorLayout:
+        size_hint_y: .15
+        ItemLabel:
+            text: 'Не знаешь что готовить? Доверься случаю!'
+            font_size: '20sp'
+            halign: 'center'
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [30, 20, 30, 50]
+        spacing: 10
+
+        UsButton:
+            text: 'Cуп'
+            on_release: root.click_soup()
+
+        ItemLabel:
+            id: soup_id
+            text: 'Случай не разыгран'
+
+        UsButton:
+            text: 'Второе'
+            on_release: root.click_dish()
+
+        ItemLabel:
+            id: dish_id
+            text: 'Случай не разыгран'
+
+        UsButton:
+            text: 'Хлеб'
+            on_release: root.click_bread()
+
+        ItemLabel:
+            id: bread_id
+            text: 'Случай не разыгран'
+
+        UsButton:
+            text: 'Компот'
+            on_release: root.click_compote()
+
+        ItemLabel:
+            id: compote_id
+            text: 'Случай не разыгран'
+
+        UsButton:
+            id: candies_title
+            text: 'А сладкое?'
+            on_release: root.click_candies()
+
+        ItemLabel:
+            id: candies_id
+            text: 'А сладкое нельзя!'
