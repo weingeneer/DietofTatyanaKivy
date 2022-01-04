@@ -1,17 +1,99 @@
-__version__ = '0.2'
+__version__ = '0.2.1'
 
-from kivy.app import App
+from kivymd.app import MDApp
 from kivy.uix.gridlayout import GridLayout
 from kivy.properties import ObjectProperty
 from kivy.core.window import Window
+from kivy.lang import Builder
 from kivymd.theming import ThemeManager
 import random
 
 # Window.size = (1080, 2400)
-Window.size = (270, 600)
+#Window.size = (270, 600)
+
+Builder.load_string('''
+#:import MDLabel kivymd.label.MDLabel
+#:import MDRaisedButton kivymd.button.MDRaisedButton
+
+<RootWidget>:
+    rows: 2
+
+    soup: soup_id
+    dish: dish_id
+    bread: bread_id
+    compote: compote_id
+    candies: candies_id
+    candies_title: candies_title
+
+    AnchorLayout:
+        size_hint_y: .15
+        ItemLabel:
+            text: 'Не знаешь что готовить? Доверься случаю!'
+            font_size: '20sp'
+            halign: 'center'
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [30, 20, 30, 50]
+        spacing: 10
+
+        UsButton:
+            text: 'Cуп'
+            on_release: root.click_soup()
+
+        ItemLabel:
+            id: soup_id
+            text: 'Случай не разыгран'
+
+        UsButton:
+            text: 'Второе'
+            on_release: root.click_dish()
+
+        ItemLabel:
+            id: dish_id
+            text: 'Случай не разыгран'
+
+        UsButton:
+            text: 'Хлеб'
+            on_release: root.click_bread()
+
+        ItemLabel:
+            id: bread_id
+            text: 'Случай не разыгран'
+
+        UsButton:
+            text: 'Компот'
+            on_release: root.click_compote()
+
+        ItemLabel:
+            id: compote_id
+            text: 'Случай не разыгран'
+
+        UsButton:
+            id: candies_title
+            text: 'А сладкое?'
+            on_release: root.click_candies()
+
+        ItemLabel:
+            id: candies_id
+            text: 'А сладкое нельзя!'
+            
+<ItemLabel@MDLabel>:
+    text_size: self.size
+    font_size: '15sp'
+    halign: 'left'
+    valign: 'middle'
+
+<UsButton@MDRaisedButton>:
+    font_size: '20sp'
+    text_size: self.size
+    halign: 'center'
+    valign: 'middle'
+    size_hint_x: 1.0
+    ''')
 
 
-class DietOfTatyanaApp(App):
+class DietOfTatyanaApp(MDApp):
     theme_cls = ThemeManager()
     title = 'Diet of Tatyana'
 
