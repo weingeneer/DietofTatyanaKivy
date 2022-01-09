@@ -28,25 +28,25 @@ source.dir = .
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.2.2
+#version = 0.2.4
 
 # (str) Application versioning (method 2)
-#version.regex = __version__ = ['"](.*)['"]
-#version.filename = %(source.dir)s/main.py
+version.regex = __version__ = ['"](.*)['"]
+version.filename = %(source.dir)s/main.py
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy==2.0.0, kivymd, akivymd, https://github.com/AndreMiras/KivyMD/archive/master.zip
+requirements = kivy==2.0.0, pillow, kivymd==0.104.2, sdl2_ttf == 2.0.15
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
 # requirements.source.kivy = ../../kivy
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/data/logo/logo.jpg
+presplash.filename = %(source.dir)s/logo.jpg
 
 # (str) Icon of the application
-#icon.filename = %(source.dir)s/data/logo/logo.jpg
+icon.filename = %(source.dir)s/logo.jpg
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
 orientation = portrait
@@ -65,7 +65,7 @@ orientation = portrait
 osx.python_version = 3
 
 # Kivy version to use
-osx.kivy_version = 2.0.0
+osx.kivy_version = 1.9.1
 
 #
 # Android specific
@@ -232,18 +232,6 @@ android.arch = arm64-v8a
 # this is not the same as app version and should only be edited if you know what you're doing
 # android.numeric_version = 1
 
-# (bool) enables Android auto backup feature (Android API >=23)
-android.allow_backup = True
-
-# (str) XML file for custom backup rules (see official auto backup documentation)
-# android.backup_rules =
-
-# (str) If you need to insert variables into your AndroidManifest.xml file,
-# you can do so with the manifestPlaceholders property.
-# This property takes a map of key-value pairs. (via a string)
-# Usage example : android.manifest_placeholders = [myCustomUrl:\"org.kivy.customurl\"]
-# android.manifest_placeholders = [:]
-
 #
 # Python for android (p4a) specific
 #
@@ -277,38 +265,10 @@ android.allow_backup = True
 #p4a.setup_py = false
 
 
-#
-# iOS specific
-#
-
-# (str) Path to a custom kivy-ios folder
-#ios.kivy_ios_dir = ../kivy-ios
-# Alternately, specify the URL and branch of a git checkout:
-ios.kivy_ios_url = https://github.com/kivy/kivy-ios
-ios.kivy_ios_branch = master
-
-# Another platform dependency: ios-deploy
-# Uncomment to use a custom checkout
-#ios.ios_deploy_dir = ../ios_deploy
-# Or specify URL and branch
-ios.ios_deploy_url = https://github.com/phonegap/ios-deploy
-ios.ios_deploy_branch = 1.10.0
-
-# (bool) Whether or not to sign the code
-ios.codesign.allowed = false
-
-# (str) Name of the certificate to use for signing the debug version
-# Get a list of available identities: buildozer ios list_identities
-#ios.codesign.debug = "iPhone Developer: <lastname> <firstname> (<hexstring>)"
-
-# (str) Name of the certificate to use for signing the release version
-#ios.codesign.release = %(ios.codesign.debug)s
-
-
 [buildozer]
 
 # (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
-log_level = 1
+log_level = 2
 
 # (int) Display warning if buildozer is run as root (0 = False, 1 = True)
 warn_on_root = 1
