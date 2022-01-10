@@ -2,6 +2,7 @@ __version__ = '0.2.6'
 
 from kivy.core.window import Window
 from kivy.lang import Builder
+from kivy.properties import StringProperty
 
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -11,6 +12,7 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.behaviors.toggle_behavior import MDToggleButton
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.card import MDCardSwipe
 import random
 
 # Window.size = (1080, 2400)
@@ -119,7 +121,26 @@ KV = '''
 <AddButton@MDFloatingActionButton>
 
     icon: 'pencil-plus-outline'
-    pos_hint: {'center_x': .9, 'center_y': .5}   
+    pos_hint: {'center_x': .9, 'center_y': .5} 
+    
+<SwipeToDeleteItem>:
+    size_hint_y: None
+    height: content.height
+
+    MDCardSwipeLayerBox:
+        padding: "8dp"
+
+        MDIconButton:
+            icon: "trash-can"
+            pos_hint: {"center_y": .5}
+            on_release: app.remove_item(root)
+
+    MDCardSwipeFrontBox:
+
+        OneLineListItem:
+            id: content
+            text: root.text
+            _no_ripple_effect: True  
 
 <ContentNavigationDrawer>
 
@@ -370,36 +391,44 @@ MDScreen:
                             title: 'Первое'
                             icon: ''
 
-                            MDLabel:
-                                text: 'Здесь должна быть история первого'
-                                halign: 'center'
+                            ScrollView:
+
+                                MDList:
+                                    id: list_soup
+                                    padding: 0
 
                         Tab:
                             id: tab11
                             title: 'Второе'
                             icon: ''
 
-                            MDLabel:
-                                text: 'Здесь должна быть история второго'
-                                halign: 'center'
+                            ScrollView:
+
+                                MDList:
+                                    id: list_dish
+                                    padding: 0
 
                         Tab:
                             id: tab12
                             title: 'Закуска'
                             icon: ''
 
-                            MDLabel:
-                                text: 'Здесь должна быть история закуски'
-                                halign: 'center'
+                            ScrollView:
+
+                                MDList:
+                                    id: list_bread
+                                    padding: 0
 
                         Tab:
                             id: tab13
                             title: 'Напиток'
                             icon: ''
 
-                            MDLabel:
-                                text: 'Здесь должна быть история напитков'
-                                halign: 'center'
+                            ScrollView:
+
+                                MDList:
+                                    id: list_compote
+                                    padding: 0
             
             MDScreen:
                 name: 'add'
@@ -499,8 +528,26 @@ class DietOfTatyanaApp(MDApp):
 
         return self.screen
 
+    def remove_item(self, instance):
+        self.screen.ids.list_soup.remove_widget(instance)
+
     def on_start(self):
-        pass
+        for soup in self._data_soup:
+            self.screen.ids.list_soup.add_widget(
+                SwipeToDeleteItem(text=soup)
+            )
+        for dish in self._data_dish:
+            self.screen.ids.list_dish.add_widget(
+                SwipeToDeleteItem(text=dish)
+            )
+        for bread in self._data_bread:
+            self.screen.ids.list_bread.add_widget(
+                SwipeToDeleteItem(text=bread)
+            )
+        for compote in self._data_compote:
+            self.screen.ids.list_compote.add_widget(
+                SwipeToDeleteItem(text=compote)
+            )
 
     def on_tab_switch(
             self, instance_tabs, instance_tab, instance_tab_label, tab_text
@@ -599,6 +646,11 @@ class Tab(MDFloatLayout, MDTabsBase):
 
 class MyToggleButton(MDFlatButton, MDToggleButton):
     pass
+
+
+class SwipeToDeleteItem(MDCardSwipe):
+    text = StringProperty()
+
 
 if __name__ == '__main__':
     DietOfTatyanaApp(DATA_SOUP, DATA_DISH, DATA_BREAD, DATA_COMPOTE, DATA_CANDIES).run()
