@@ -1,21 +1,126 @@
-__version__ = '0.2.5'
+__version__ = '0.2.6'
 
-from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 from kivy.lang import Builder
 
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.screen import MDScreen
 from kivymd.uix.tab import MDTabsBase
 from kivymd.uix.floatlayout import MDFloatLayout
-from kivymd.icon_definitions import md_icons
+from kivymd.uix.menu import MDDropdownMenu
+from kivymd.uix.button import MDFlatButton
+from kivymd.uix.behaviors.toggle_behavior import MDToggleButton
+from kivymd.uix.dialog import MDDialog
 import random
 
 # Window.size = (1080, 2400)
 Window.size = (270, 600)
 
+DATA_SOUP = [
+    'Суп с курицей, картошкой, марковкой',
+    'Суп с рыбой, яйцом, картошкой',
+    'Суп с гречкой и курица',
+    'Суп с рисом и курица',
+    'Суп с вермишелью',
+    'Суп с фрикадельками и рисом',
+    'Суп с фрикадельками и вермишелью',
+    'Суп с фрикадельками и гречкой',
+    'Суп с фрикадельками и овощами',
+]
+DATA_DISH = [
+    'Овощное рагу',
+    'Отварной картофель с рыбой',
+    'Отварной картофель с курицей',
+    'Отварной картофель с котлетами',
+    'Отварной картофель с фрикадельками',
+    'Картошка в мундире в духовке',
+    'Макароны с котлетами из курицы',
+    'Макароны с рыбой',
+    'Макароны с курицей',
+    'Макароны с фрикадельками',
+    'Овощи в горшочке с фаршем',
+    'Овощи в горшочке с курицей',
+    'Овощи в горшочке с рыбой',
+    'Картофельное пюре и рыба на пару',
+    'Картофельное пюре с рыбной котлетой',
+    'Картофельное пюре с куриной котлетой',
+    'Картофельное пюре и фрикадельки с соусом',
+    'Гречневая каша с рыбой',
+    'Гречневая каша с рыбной котлетой',
+    'Гречневая каша с куриной котлетой',
+    'Гречневая каша с фрикадельками',
+    'Овсянная каша со сливочным маслом',
+    'Рисовая каша со сливочным маслом',
+    'Рисовая каша с рыбой на пару',
+    'Рисовая каша с рыбной котлетой на пару',
+    'Рисовая каша с куриной котлетой',
+    'Рисовая каша с фрикадельками',
+    'Суфле рыбное с картофельным пюре',
+    'Суфле куриное с картофельным пюре',
+    'Суфле рыбное с гречневой кашей',
+    'Суфле рыбное с рисовой кашей',
+    'Суфле рыбное с овощами',
+    'Суфле куриное с гречневой кашей',
+    'Суфле куриное с рисовой кашей',
+    'Суфле куриное с овощами',
+    'Манная каша со сливочным маслом',
+    'Рыба с картошкой запечённая в духовке',
+    'Рыба с овощами запечённая в духовке',
+    'Курица с картошкой запечённая в духовке',
+    'Курица с овощами запечённая в духовке',
+    'Омлет',
+]
+DATA_BREAD = [
+    'Сухари',
+    'Тосты',
+    'Крекеры',
+    'Галетное печенье',
+    'Бутерброд из вчерашнего хлеба с домашним паштетом',
+    'Бутерброд из вчерашнего хлеба с сыром',
+]
+DATA_COMPOTE = [
+    'Компот из сухофруктов'
+]
+DATA_CANDIES = [
+    'красивая', 'умная', 'заботливая', 'привлекательная', 'сексуальная',
+    'добрая', 'нежная', 'милая', 'очаровательная', 'обворожительная',
+    'неповторимая', 'неописуемая', 'незабываемая', 'неотразимая',
+    'шикарная', 'ослепительная', 'страстная', 'недоступная', 'божественная',
+    'завораживающая', 'ангельская', 'лучезарная', 'сексапильная', 'яркая',
+    'пушистая', 'обалденная', 'сногсшибательная', 'стройная', 'обольстительная',
+    'кокетливая', 'утончённая', 'грациозная', 'весёлая', 'энергичная', 'креативная',
+    'стильная', 'коммуникабельная', 'тактичная', 'любвеобильная', 'романтичная',
+    'краса моих глаз', 'сказочная', 'симпатичная', 'пылкая', 'свет очей моих',
+    'ласковая', 'сладенькая', 'умопомрачительная', 'желанная', 'непредсказуемая',
+    'загадочная', 'цветущая', 'безупречная', 'гармоничная', 'отзывчивая', 'совершенная',
+    'лучшая', 'скромная', 'изысканная', 'шаловливая', 'отпадная', 'искренняя',
+    'дружелюбная', 'понимающая', 'экстравагантная', 'мечтательная', 'ароматная',
+    'искромётная', 'чистолюбивая', 'манящая', 'восторженная', 'бескорыстная',
+    'непосредственная', 'соблазнительная', 'одурманивающая', 'жизнерадостная',
+    'прелестная', 'улыбчивая', 'застенчивая', 'зажигательная', 'честная', 'возбуждающая',
+    'чистосердечная', 'игривая', 'обаятельная', 'непредсказуемая', 'целеустремлённая',
+    'дивная', 'женственная', 'блаженная', 'бесподобная', 'лучезарная', 'ненаглядная',
+    'необходимая', 'изумительная', 'сказочная', 'трогательная', 'миниатюрная',
+    'любимая', 'самая-самая',
+]
+
 KV = '''
+<MyButton@MDFillRoundFlatButton>
+
+    size_hint: 1.0, 0.3
+    text_size: '30sp'
+    
+<MyLabel@MDLabel>
+
+    text: 'Случай не использован'
+    text_size: '30sp'
+    halign: 'center'
+
+<AddButton@MDFloatingActionButton>
+
+    icon: 'pencil-plus-outline'
+    pos_hint: {'center_x': .9, 'center_y': .5}   
+
 <ContentNavigationDrawer>
 
     orientation: "vertical"
@@ -53,17 +158,21 @@ KV = '''
                 text: "Что приготовить?"
                 on_press:
                     root.nav_drawer.set_state("close")
-                    root.screen_manager.current = "scr 1"
+                    root.screen_manager.current = "eats"
 
             OneLineListItem:
                 text: "История"
                 on_press:
                     root.nav_drawer.set_state("close")
-                    root.screen_manager.current = "scr 2"
+                    root.screen_manager.current = "history"
+                    
+            OneLineListItem:
+                text: "Группы"
+                on_press:
+                    root.nav_drawer.set_state("close")
+                    root.screen_manager.current = "groups"
 
 MDScreen:
-    soup: soup_id
-    dish: dish_id
 
     MDNavigationLayout:
         x: toolbar.height
@@ -72,7 +181,7 @@ MDScreen:
             id: screen_manager
 
             MDScreen:
-                name: "scr 1"
+                name: "eats"
 
                 MDBoxLayout:
                     orientation: 'vertical'
@@ -81,7 +190,7 @@ MDScreen:
                         id: toolbar
                         pos_hint: {"top": 1}
                         elevation: 10
-                        title: "Доверься случаю!"
+                        title: "Что приготовить?"
                         left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
 
                     MDTabs:
@@ -94,37 +203,39 @@ MDScreen:
                             icon: ''
 
                             MDBoxLayout:
-                                padding: [20, 100, 20, 60]
+                                padding: '20dp', '100dp', '20dp', '60dp'
                                 orientation: 'vertical'
 
-                                MDFillRoundFlatButton:
-                                    text: 'Cуп'
-                                    size_hint: 1.0, 1.0
+                                MyButton:
+                                    text: 'Доверься случаю!'
+                                    size_hint: 1.0, 0.3
                                     on_release: app.click_soup()
 
-                                MDLabel:
+                                MyLabel:
                                     id: soup_id
-                                    text: 'Случай не использован'
-                                    halign: 'center'
-
+                                
+                                AddButton:
+                                    on_release: screen_manager.current = 'add' 
+                                    
                         Tab:
                             id: tab2
                             title: 'Второе'
                             icon: ''
 
                             MDBoxLayout:
-                                padding: [20, 100, 20, 60]
+                                padding: '20dp', '100dp', '20dp', '60dp'
                                 orientation: 'vertical'
 
-                                MDFillRoundFlatButton:
-                                    text: 'Второе'
-                                    size_hint: 1.0, 1.0
+                                MyButton:
+                                    text: 'Доверься случаю!'
+                                    size_hint: 1.0, 0.3
                                     on_release: app.click_dish()
 
-                                MDLabel:
+                                MyLabel:
                                     id: dish_id
-                                    text: 'Случай не использован'
-                                    halign: 'center'
+                                    
+                                AddButton:
+                                    on_release: screen_manager.current = 'add' 
 
                         Tab:
                             id: tab3
@@ -132,18 +243,19 @@ MDScreen:
                             icon: ''
 
                             MDBoxLayout:
-                                padding: [20, 100, 20, 60]
+                                padding: '20dp', '100dp', '20dp', '60dp'
                                 orientation: 'vertical'
 
-                                MDFillRoundFlatButton:
-                                    text: 'Закуска'
-                                    size_hint: 1.0, 1.0
+                                MyButton:
+                                    text: 'Доверься случаю!'
+                                    size_hint: 1.0, 0.3
                                     on_release: app.click_bread()
 
-                                MDLabel:
+                                MyLabel:
                                     id: bread_id
-                                    text: 'Случай не использован'
-                                    halign: 'center'
+                                    
+                                AddButton:
+                                    on_release: screen_manager.current = 'add' 
 
                         Tab:
                             id: tab4
@@ -151,18 +263,19 @@ MDScreen:
                             icon: ''
 
                             MDBoxLayout:
-                                padding: [20, 100, 20, 60]
+                                padding: '20dp', '100dp', '20dp', '60dp'
                                 orientation: 'vertical'
 
-                                MDFillRoundFlatButton:
-                                    text: 'Напиток'
-                                    size_hint: 1.0, 1.0
+                                MyButton:
+                                    text: 'Доверься случаю!'
+                                    size_hint: 1.0, 0.3
                                     on_release: app.click_compote()
 
-                                MDLabel:
+                                MyLabel:
                                     id: compote_id
-                                    text: 'Случай не использован'  
-                                    halign: 'center'                      
+                                    
+                                AddButton:
+                                    on_release: screen_manager.current = 'add'                      
 
                         Tab:
                             id: tab5
@@ -170,22 +283,20 @@ MDScreen:
                             icon: ''
 
                             MDBoxLayout:
-                                padding: [20, 100, 20, 60]
+                                padding: '20dp', '100dp', '20dp', '60dp'
                                 orientation: 'vertical'
 
-                                MDFillRoundFlatButton:
+                                MyButton:
                                     id: candies_title
-                                    text: 'Сладкое'
-                                    size_hint: 1.0, 1.0
+                                    text: 'Доверься случаю!'
+                                    size_hint: 1.0, 0.3
                                     on_release: app.click_candies()
 
-                                MDLabel:
+                                MyLabel:
                                     id: candies_id
-                                    text: 'А сладкое нельзя!'
-                                    halign: 'center'
-
+                                    
             MDScreen:
-                name: "scr 2"
+                name: "history"
 
                 MDBoxLayout:
                     orientation: 'vertical'
@@ -236,7 +347,113 @@ MDScreen:
                             MDLabel:
                                 text: 'Здесь должна быть история напитков'
                                 halign: 'center'
+            
+            MDScreen:
+                name: "groups"
 
+                MDBoxLayout:
+                    orientation: 'vertical'
+
+                    MDToolbar:
+                        id: toolbar
+                        pos_hint: {"top": 1}
+                        elevation: 10
+                        title: "Группы"
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+
+                    MDTabs:
+                        id: tabs
+                        on_tab_switch: app.on_tab_switch(*args)
+
+                        Tab:
+                            id: tab10
+                            title: 'Первое'
+                            icon: ''
+
+                            MDLabel:
+                                text: 'Здесь должна быть история первого'
+                                halign: 'center'
+
+                        Tab:
+                            id: tab11
+                            title: 'Второе'
+                            icon: ''
+
+                            MDLabel:
+                                text: 'Здесь должна быть история второго'
+                                halign: 'center'
+
+                        Tab:
+                            id: tab12
+                            title: 'Закуска'
+                            icon: ''
+
+                            MDLabel:
+                                text: 'Здесь должна быть история закуски'
+                                halign: 'center'
+
+                        Tab:
+                            id: tab13
+                            title: 'Напиток'
+                            icon: ''
+
+                            MDLabel:
+                                text: 'Здесь должна быть история напитков'
+                                halign: 'center'
+            
+            MDScreen:
+                name: 'add'
+                                 
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    spacing: '20sp'
+                    
+                    MDToolbar:
+                        id: toolbar
+                        pos_hint: {"top": 1}
+                        elevation: 10
+                        title: "Добавить блюдо"
+                        
+                    MDTextField:
+                        id: field
+                        pos_hint: {'center_x': .5, 'center_y': .6}
+                        size_hint_x: None
+                        width: "200dp"
+                        hint_text: "Выберите группу блюд"
+                        required: True
+                        input_filter: 'callable'
+                        helper_text: "Обязательное поле"
+                        helper_text_mode: "on_error"
+                        on_focus: if self.focus: app.menu.open()
+                        
+                    MDTextField:
+                        id: dish
+                        pos_hint: {'center_x': .5, 'center_y': .6}
+                        size_hint_x: None
+                        width: "200dp"
+                        hint_text: 'Введите желаемое блюдо'
+                        required: True
+                        helper_text: "Обязательное поле"
+                        helper_text_mode: "on_error"
+                    
+                    MDBoxLayout:
+                        adaptive_size: True
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        
+                        MyToggleButton:
+                            id: cancel_change
+                            text: 'Назад'
+                            group: 'x'
+                            on_release: screen_manager.current = 'eats'
+                            
+                        MyToggleButton:
+                            id: confirm_change
+                            text: 'OK'
+                            group: 'x'
+                            on_release: app.dialogs() 
+                                                                              
+                    Widget:
+                                        
         MDNavigationDrawer:
             id: nav_drawer
 
@@ -249,11 +466,31 @@ MDScreen:
 class DietOfTatyanaApp(MDApp):
     title = 'Diet of Tatyana'
     by_who = 'by DenKung'
+    dialog_confirm = None
+    dialog_error = None
 
-    def __init__(self, **kwargs):
+    def __init__(self, data_soup, data_dish, data_bread, data_compote, data_candies, **kwargs):
         super().__init__(**kwargs)
         self.screen = Builder.load_string(KV)
-        self.click = 0
+        menu_items = [
+            {
+                'viewclass': "OneLineListItem",
+                'text': i,
+                'height': 56,
+                'on_release': lambda x=i: self.set_item(x),
+            } for i in ['Первое', 'Второе', 'Закуски', 'Напитки']]
+        self.menu = MDDropdownMenu(
+            caller=self.screen.ids.field,
+            items=menu_items,
+            position="bottom",
+            width_mult=4,
+        )
+        self._click = 0
+        self._data_soup = data_soup
+        self._data_dish = data_dish
+        self._data_bread = data_bread
+        self._data_compote = data_compote
+        self._data_candies = data_candies
 
     def build(self):
         self.theme_cls.primary_palette = 'Green'
@@ -270,110 +507,86 @@ class DietOfTatyanaApp(MDApp):
     ):
         pass
 
+    def set_item(self, text__item):
+        self.screen.ids.field.text = text__item
+        self.menu.dismiss()
+
     def click_soup(self):
-        data_soup = [
-            'Суп с курицей, картошкой, марковкой',
-            'Суп с рыбой, яйцом, картошкой',
-            'Суп с гречкой и курица',
-            'Суп с рисом и курица',
-            'Суп с вермишелью',
-            'Суп с фрикадельками и рисом',
-            'Суп с фрикадельками и вермишелью',
-            'Суп с фрикадельками и гречкой',
-            'Суп с фрикадельками и овощами',
-        ]
-        self.screen.ids.soup_id.text = random.choice(data_soup)
+        self.screen.ids.soup_id.text = random.choice(self._data_soup)
 
     def click_dish(self):
-        data_dish = [
-            'Овощное рагу',
-            'Отварной картофель с рыбой',
-            'Отварной картофель с курицей',
-            'Отварной картофель с котлетами',
-            'Отварной картофель с фрикадельками',
-            'Картошка в мундире в духовке',
-            'Макароны с котлетами из курицы',
-            'Макароны с рыбой',
-            'Макароны с курицей',
-            'Макароны с фрикадельками',
-            'Овощи в горшочке с фаршем',
-            'Овощи в горшочке с курицей',
-            'Овощи в горшочке с рыбой',
-            'Картофельное пюре и рыба на пару',
-            'Картофельное пюре с рыбной котлетой',
-            'Картофельное пюре с куриной котлетой',
-            'Картофельное пюре и фрикадельки с соусом',
-            'Гречневая каша с рыбой',
-            'Гречневая каша с рыбной котлетой',
-            'Гречневая каша с куриной котлетой',
-            'Гречневая каша с фрикадельками',
-            'Овсянная каша со сливочным маслом',
-            'Рисовая каша со сливочным маслом',
-            'Рисовая каша с рыбой на пару',
-            'Рисовая каша с рыбной котлетой на пару',
-            'Рисовая каша с куриной котлетой',
-            'Рисовая каша с фрикадельками',
-            'Суфле рыбное с картофельным пюре',
-            'Суфле куриное с картофельным пюре',
-            'Суфле рыбное с гречневой кашей',
-            'Суфле рыбное с рисовой кашей',
-            'Суфле рыбное с овощами',
-            'Суфле куриное с гречневой кашей',
-            'Суфле куриное с рисовой кашей',
-            'Суфле куриное с овощами',
-            'Манная каша со сливочным маслом',
-            'Рыба с картошкой запечённая в духовке',
-            'Рыба с овощами запечённая в духовке',
-            'Курица с картошкой запечённая в духовке',
-            'Курица с овощами запечённая в духовке',
-            'Омлет',
-        ]
-        self.screen.ids.dish_id.text = random.choice(data_dish)
+        self.screen.ids.dish_id.text = random.choice(self._data_dish)
 
     def click_bread(self):
-        data_bread = [
-            'Сухари',
-            'Тосты',
-            'Крекеры',
-            'Галетное печенье',
-            'Бутерброд из вчерашнего хлеба с домашним паштетом',
-            'Бутерброд из вчерашнего хлеба с сыром',
-        ]
-        self.screen.ids.bread_id.text = random.choice(data_bread)
+        self.screen.ids.bread_id.text = random.choice(self._data_bread)
 
     def click_compote(self):
-        self.click += 1
-        if self.click == 5:
+        if len(self._data_compote) == 1 and self._click >= 5:
             self.screen.ids.compote_id.text = 'Шо тыкаешь? Другого нельзя!'
-            self.click = 0
+            self._click = 0
         else:
-            self.screen.ids.compote_id.text = 'Компот из сухофруктов'
+            self.screen.ids.compote_id.text = random.choice(self._data_compote)
+            self._click += 1
 
     def click_candies(self):
-        data_candies = [
-            'красивая', 'умная', 'заботливая', 'привлекательная', 'сексуальная',
-            'добрая', 'нежная', 'милая', 'очаровательная', 'обворожительная',
-            'неповторимая', 'неописуемая', 'незабываемая', 'неотразимая',
-            'шикарная', 'ослепительная', 'страстная', 'недоступная', 'божественная',
-            'завораживающая', 'ангельская', 'лучезарная', 'сексапильная', 'яркая',
-            'пушистая', 'обалденная', 'сногсшибательная', 'стройная', 'обольстительная',
-            'кокетливая', 'утончённая', 'грациозная', 'весёлая', 'энергичная', 'креативная',
-            'стильная', 'коммуникабельная', 'тактичная', 'любвеобильная', 'романтичная',
-            'краса моих глаз', 'сказочная', 'симпатичная', 'пылкая', 'свет очей моих',
-            'ласковая', 'сладенькая', 'умопомрачительная', 'желанная', 'непредсказуемая',
-            'загадочная', 'цветущая', 'безупречная', 'гармоничная', 'отзывчивая', 'совершенная',
-            'лучшая', 'скромная', 'изысканная', 'шаловливая', 'отпадная', 'искренняя',
-            'дружелюбная', 'понимающая', 'экстравагантная', 'мечтательная', 'ароматная',
-            'искромётная', 'чистолюбивая', 'манящая', 'восторженная', 'бескорыстная',
-            'непосредственная', 'соблазнительная', 'одурманивающая', 'жизнерадостная',
-            'прелестная', 'улыбчивая', 'застенчивая', 'зажигательная', 'честная', 'возбуждающая',
-            'чистосердечная', 'игривая', 'обаятельная', 'непредсказуемая', 'целеустремлённая',
-            'дивная', 'женственная', 'блаженная', 'бесподобная', 'лучезарная', 'ненаглядная',
-            'необходимая', 'изумительная', 'сказочная', 'трогательная', 'миниатюрная',
-            'любимая', 'самая-самая',
-        ]
         self.screen.ids.candies_title.text = 'Вместо сладкого:'
-        self.screen.ids.candies_id.text = 'Ты ' + random.choice(data_candies) + '!'
+        self.screen.ids.candies_id.text = 'Ты ' + random.choice(self._data_candies) + '!'
+
+    def dialogs(self):
+        if self.screen.ids.field.text and self.screen.ids.dish.text:
+            if not self.dialog_confirm:
+                self.dialog_confirm = MDDialog(
+                    text="Внести изменения?",
+                    buttons=[
+                        MDFlatButton(
+                            text="Назад",
+                            theme_text_color="Custom",
+                            text_color=self.theme_cls.primary_color,
+                            on_release=self.dialog_confirm_close
+                        ),
+                        MDFlatButton(
+                            text="OK",
+                            theme_text_color="Custom",
+                            text_color=self.theme_cls.primary_color,
+                            on_release=self.add_eats
+                        ),
+                    ],
+                )
+            self.dialog_confirm.open()
+        else:
+            if not self.dialog_error:
+                self.dialog_error = MDDialog(
+                    text="Заполните обязательные поля",
+                    buttons=[
+                        MDFlatButton(
+                            text="OK",
+                            theme_text_color="Custom",
+                            text_color=self.theme_cls.primary_color,
+                            on_release=self.dialog_error_close
+                        ),
+                    ],
+                )
+            self.dialog_error.open()
+
+    def dialog_error_close(self, *args):
+        self.dialog_error.dismiss()
+
+    def dialog_confirm_close(self, *args):
+        self.dialog_confirm.dismiss()
+
+    def add_eats(self, *args):
+        dict_eats = {
+            'Первое': self._data_soup,
+            'Второе': self._data_dish,
+            'Закуски': self._data_bread,
+            'Напитки': self._data_compote,
+        }
+
+        group_eats = self.screen.ids.field.text
+        dish = self.screen.ids.dish.text
+        dict_eats[group_eats].append(dish)
+        self.dialog_confirm_close()
+        self.screen.ids.screen_manager.current = 'eats'
 
 
 class ContentNavigationDrawer(MDBoxLayout):
@@ -384,126 +597,8 @@ class Tab(MDFloatLayout, MDTabsBase):
     pass
 
 
-class MyScreen(MDScreen):
-    click = 0
-
-    soup = ObjectProperty()
-    dish = ObjectProperty()
-    bread = ObjectProperty()
-    compote = ObjectProperty()
-    candies = ObjectProperty()
-    candies_title = ObjectProperty()
-
-    def click_soup(self):
-        data_soup = [
-            'Суп с курицей, картошкой, марковкой',
-            'Суп с рыбой, яйцом, картошкой',
-            'Суп с гречкой и курица',
-            'Суп с рисом и курица',
-            'Суп с вермишелью',
-            'Суп с фрикадельками и рисом',
-            'Суп с фрикадельками и вермишелью',
-            'Суп с фрикадельками и гречкой',
-            'Суп с фрикадельками и овощами',
-        ]
-        self.soup.text = random.choice(data_soup)
-        self.soup.text_size = self.soup.size
-
-    def click_dish(self):
-        data_dish = [
-            'Овощное рагу',
-            'Отварной картофель с рыбой',
-            'Отварной картофель с курицей',
-            'Отварной картофель с котлетами',
-            'Отварной картофель с фрикадельками',
-            'Картошка в мундире в духовке',
-            'Макароны с котлетами из курицы',
-            'Макароны с рыбой',
-            'Макароны с курицей',
-            'Макароны с фрикадельками',
-            'Овощи в горшочке с фаршем',
-            'Овощи в горшочке с курицей',
-            'Овощи в горшочке с рыбой',
-            'Картофельное пюре и рыба на пару',
-            'Картофельное пюре с рыбной котлетой',
-            'Картофельное пюре с куриной котлетой',
-            'Картофельное пюре и фрикадельки с соусом',
-            'Гречневая каша с рыбой',
-            'Гречневая каша с рыбной котлетой',
-            'Гречневая каша с куриной котлетой',
-            'Гречневая каша с фрикадельками',
-            'Овсянная каша со сливочным маслом',
-            'Рисовая каша со сливочным маслом',
-            'Рисовая каша с рыбой на пару',
-            'Рисовая каша с рыбной котлетой на пару',
-            'Рисовая каша с куриной котлетой',
-            'Рисовая каша с фрикадельками',
-            'Суфле рыбное с картофельным пюре',
-            'Суфле куриное с картофельным пюре',
-            'Суфле рыбное с гречневой кашей',
-            'Суфле рыбное с рисовой кашей',
-            'Суфле рыбное с овощами',
-            'Суфле куриное с гречневой кашей',
-            'Суфле куриное с рисовой кашей',
-            'Суфле куриное с овощами',
-            'Манная каша со сливочным маслом',
-            'Рыба с картошкой запечённая в духовке',
-            'Рыба с овощами запечённая в духовке',
-            'Курица с картошкой запечённая в духовке',
-            'Курица с овощами запечённая в духовке',
-            'Омлет',
-        ]
-        self.dish.text = random.choice(data_dish)
-        self.dish.text_size = self.dish.size
-
-    def click_bread(self):
-        data_bread = [
-            'Сухари',
-            'Тосты',
-            'Крекеры',
-            'Галетное печенье',
-            'Бутерброд из вчерашнего хлеба с домашним паштетом',
-            'Бутерброд из вчерашнего хлеба с сыром',
-        ]
-        self.bread.text = random.choice(data_bread)
-        self.bread.text_size = self.bread.size
-
-    def click_compote(self):
-        self.click += 1
-        if self.click == 5:
-            self.compote.text = 'Шо тыкаешь? Другого нельзя!'
-            self.click = 0
-        else:
-            self.compote.text = 'Компот из сухофруктов'
-            self.compote.text_size = self.compote.size
-
-    def click_candies(self):
-        data_candies = [
-            'красивая', 'умная', 'заботливая', 'привлекательная', 'сексуальная',
-            'добрая', 'нежная', 'милая', 'очаровательная', 'обворожительная',
-            'неповторимая', 'неописуемая', 'незабываемая', 'неотразимая',
-            'шикарная', 'ослепительная', 'страстная', 'недоступная', 'божественная',
-            'завораживающая', 'ангельская', 'лучезарная', 'сексапильная', 'яркая',
-            'пушистая', 'обалденная', 'сногсшибательная', 'стройная', 'обольстительная',
-            'кокетливая', 'утончённая', 'грациозная', 'весёлая', 'энергичная', 'креативная',
-            'стильная', 'коммуникабельная', 'тактичная', 'любвеобильная', 'романтичная',
-            'краса моих глаз', 'сказочная', 'симпатичная', 'пылкая', 'свет очей моих',
-            'ласковая', 'сладенькая', 'умопомрачительная', 'желанная', 'непредсказуемая',
-            'загадочная', 'цветущая', 'безупречная', 'гармоничная', 'отзывчивая', 'совершенная',
-            'лучшая', 'скромная', 'изысканная', 'шаловливая', 'отпадная', 'искренняя',
-            'дружелюбная', 'понимающая', 'экстравагантная', 'мечтательная', 'ароматная',
-            'искромётная', 'чистолюбивая', 'манящая', 'восторженная', 'бескорыстная',
-            'непосредственная', 'соблазнительная', 'одурманивающая', 'жизнерадостная',
-            'прелестная', 'улыбчивая', 'застенчивая', 'зажигательная', 'честная', 'возбуждающая',
-            'чистосердечная', 'игривая', 'обаятельная', 'непредсказуемая', 'целеустремлённая',
-            'дивная', 'женственная', 'блаженная', 'бесподобная', 'лучезарная', 'ненаглядная',
-            'необходимая', 'изумительная', 'сказочная', 'трогательная', 'миниатюрная',
-            'любимая', 'самая-самая',
-        ]
-        self.candies_title.text = 'Вместо сладкого:'
-        self.candies.text = 'Ты ' + random.choice(data_candies) + '!'
-        self.candies.text_size = self.candies.size
-
+class MyToggleButton(MDFlatButton, MDToggleButton):
+    pass
 
 if __name__ == '__main__':
-    DietOfTatyanaApp().run()
+    DietOfTatyanaApp(DATA_SOUP, DATA_DISH, DATA_BREAD, DATA_COMPOTE, DATA_CANDIES).run()
